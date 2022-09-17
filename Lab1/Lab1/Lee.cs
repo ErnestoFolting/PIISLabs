@@ -7,6 +7,7 @@ struct cell
 {
     public int i;
     public int j;
+    public int distance = 0;
 }
 namespace Lab1
 {
@@ -32,6 +33,37 @@ namespace Lab1
         {
             return (cellToCheck.i >= 0 && cellToCheck.i < Maze[0].Count && cellToCheck.j >= 0 && cellToCheck.j < Maze.Count);
         }
+        public List<cell> nearFind(cell currentCell)
+        {
+            cell temp = new cell();
+            temp.distance = ++currentCell.distance;
+            temp.i = currentCell.i + 1;
+            temp.j = currentCell.j;
+            List<cell> list = new List<cell>();
+            if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
+            {
+                list.Add(temp);
+            }
+            temp.i = currentCell.i - 1;
+            temp.j = currentCell.j;
+            if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
+            {
+                list.Add(temp);
+            }
+            temp.i = currentCell.i;
+            temp.j = currentCell.j + 1;
+            if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
+            {
+                list.Add(temp);
+            }
+            temp.i = currentCell.i;
+            temp.j = currentCell.j - 1;
+            if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
+            {
+                list.Add(temp);
+            }
+            return list;
+        }
         public cell findFinalCell(cell start, cell final)
         {
 
@@ -42,46 +74,21 @@ namespace Lab1
             visited[start.i][start.j] = true;
             Queue<cell> q = new Queue<cell>();
             q.Enqueue(start);
-            int waveNumber = 0;
             while (q.Count != 0)
             {
-                waveNumber++;
                 cell cur = q.Dequeue();
                 if(cur.i == final.i && cur.j == final.j)
                 {
-                    Console.WriteLine("We found the final cell! Coords is: [{0},{1}]. Distance is: {2}",cur.i,cur.j,waveNumber);
+                    Console.WriteLine("We found the final cell! Coords is: [{0},{1}]. Distance is: {2}",cur.i,cur.j,cur.distance);
                     return cur;
                 }
 
-                cell temp = new cell();
-                temp.i = cur.i + 1;
-                temp.j = cur.j;
-                if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
+                List<cell> list = nearFind(cur);
+                foreach (cell el in list)
                 {
-                    visited[temp.i][temp.j] = true;
-                    q.Enqueue(temp);
-                }
-                temp.i = cur.i - 1;
-                temp.j = cur.j;
-                if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
-                {
-                    visited[temp.i][temp.j] = true;
-                    q.Enqueue(temp);
-                }
-                temp.i = cur.i;
-                temp.j = cur.j + 1;
-                if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
-                {
-                    visited[temp.i][temp.j] = true;
-                    q.Enqueue(temp);
-                }
-                temp.i = cur.i;
-                temp.j = cur.j - 1;
-                if (isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
-                {
-                    visited[temp.i][temp.j] = true;
-                    q.Enqueue(temp);
-                }
+                    q.Enqueue(el);
+                    visited[el.i][el.j] = true;
+                }                
             }
             Console.WriteLine("NOT FOUND");
             return default;
