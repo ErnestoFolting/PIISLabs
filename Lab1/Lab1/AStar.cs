@@ -11,10 +11,11 @@ namespace Lab1
         public int i;
         public int j;
         public Point previous;
+        public int h = 0;
         public int g = 0;
         public void evaluate(List<List<int>> maze, Point final)
         {
-            g = (Math.Abs(final.i - i) + Math.Abs(final.j - j))*10;
+            h = (Math.Abs(final.i - i) + Math.Abs(final.j - j))*10;
         }
     }
     internal class AStar
@@ -54,6 +55,7 @@ namespace Lab1
                 temp.i = currentPoint.i + movesI[i];
                 temp.j = currentPoint.j + movesJ[i];
                 temp.evaluate(Maze,final);
+                temp.g = temp.previous.g;
                 temp.g += 10;
                 if(isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
                 {
@@ -74,10 +76,10 @@ namespace Lab1
 
             while(opened.Count != 0)
             {
-                Point current = opened.First(el => el.g == opened.Select(el => el.g).Min());
+                Point current = opened.First(el => el.h + el.g == opened.Select(el => el.h + el.g).Min());
                 if(current.i == final.i && current.j == final.j)
                 {
-                    Console.WriteLine("\nWe have found!!! The cost is:{0}",current.g);
+                    Console.WriteLine("\n\nWe have found!!! The cost is:{0}",current.h + current.g);
                     return current;
                 }
                 opened.Remove(current);
@@ -91,8 +93,9 @@ namespace Lab1
                         if(p.i == pOpened.i && p.j == pOpened.j)
                         {
                             haveToAdd = false;
-                            if (p.g < pOpened.g)
+                            if ((p.h + p.g) < (pOpened.h + pOpened.g))
                             {
+                                pOpened.h = p.h;
                                 pOpened.g = p.g;
                                 pOpened.previous = p.previous;
                             }
