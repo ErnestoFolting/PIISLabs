@@ -23,6 +23,16 @@ namespace Lab1
             final.j = Convert.ToInt32(Console.ReadLine());
             cell foundFinal = alg.findFinalCell( start,final);
             alg.buildPath(start,foundFinal);
+            /*****************A-STAR ALGO******************/
+            Point start2 = new Point();
+            Point final2 = new Point();
+            start2.i = start.i;
+            start2.j = start.j;
+            final2.i = final.i;
+            final2.j = final.j;
+            AStar astar = new AStar(Maze,final2);
+            Point foundFinal2 = astar.findFinal(start2);
+            astar.buildPath(start2,foundFinal2);
         }
     }
 }
