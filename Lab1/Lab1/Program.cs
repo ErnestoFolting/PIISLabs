@@ -21,7 +21,8 @@ namespace Lab1
             final.i = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Input final cell j:");
             final.j = Convert.ToInt32(Console.ReadLine());
-            alg.findFinalCell(start,final);
+            cell foundFinal = alg.findFinalCell( start,final);
+            alg.buildPath(start,foundFinal);
         }
     }
 }
