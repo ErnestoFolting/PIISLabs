@@ -36,46 +36,21 @@ namespace Lab1
         }
         public List<cell> nearFind(cell currentCell)
         {
-            int i = currentCell.i;
-            int j = currentCell.j;
-            int distance = currentCell.distance + 1;
-            cell temp1 = new cell();
-            cell temp2 = new cell();
-            cell temp3 = new cell();
-            cell temp4 = new cell();
-            temp1.distance = distance;
-            temp2.distance = distance;
-            temp3.distance = distance;
-            temp4.distance = distance;
-            temp1.previous = currentCell;
-            temp2.previous = currentCell;
-            temp3.previous = currentCell;
-            temp4.previous = currentCell;
-            temp1.i = i + 1;
-            temp1.j = j;
+
+            List<int> movesI = new List<int>() { 0, -1, 0, 1 };
+            List<int> movesJ = new List<int>() { -1, 0, 1, 0 };
             List<cell> list = new List<cell>();
-            if (isCorrect(temp1) && Maze[temp1.i][temp1.j] == 1 && visited[temp1.i][temp1.j] == false)
+            for(int i = 0; i < movesI.Count; i++)
             {
-                
-                list.Add(temp1);
-            }
-            temp2.i = i - 1;
-            temp2.j = j;
-            if (isCorrect(temp2) && Maze[temp2.i][temp2.j] == 1 && visited[temp2.i][temp2.j] == false)
-            {
-                list.Add(temp2);
-            }
-            temp3.i = i;
-            temp3.j = j + 1;
-            if (isCorrect(temp3) && Maze[temp3.i][temp3.j] == 1 && visited[temp3.i][temp3.j] == false)
-            {
-                list.Add(temp3);
-            }
-            temp4.i = i;
-            temp4.j = j - 1;
-            if (isCorrect(temp4) && Maze[temp4.i][temp4.j] == 1 && visited[temp4.i][temp4.j] == false)
-            {
-                list.Add(temp4);
+                cell temp = new cell();
+                temp.previous = currentCell;
+                temp.distance = currentCell.distance + 1;
+                temp.i = currentCell.i + movesI[i];
+                temp.j = currentCell.j + movesJ[i];
+                if(isCorrect(temp) && Maze[temp.i][temp.j] == 1 && visited[temp.i][temp.j] == false)
+                {
+                    list.Add(temp);
+                }
             }
             return list;
         }

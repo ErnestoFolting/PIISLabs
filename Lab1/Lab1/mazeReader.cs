@@ -32,10 +32,19 @@ namespace Lab1
             {
                 for(int j = 0; j < 10; j++)
                 {
+                    if(Maze[i][j] == 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.Green;
+                    }
                     Console.Write(" {0}",Maze[i][j]);
                 }
                 Console.WriteLine() ;
             }
+            Console.ResetColor();
         }
     }
 }

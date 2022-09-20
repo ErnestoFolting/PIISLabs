@@ -48,7 +48,7 @@ namespace Lab1
             List<int> movesI = new List<int>() { 0, -1, -1, -1, 0, 1, 1, 1 };
             List<int> movesJ = new List<int>() { -1, -1, 0, 1, 1, 1, 0, -1 };
             List<Point> lst = new List<Point>();
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < movesI.Count; i++)
             {
                 Point temp = new Point();
                 temp.previous = currentPoint;
