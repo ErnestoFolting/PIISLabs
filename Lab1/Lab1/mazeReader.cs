@@ -26,25 +26,9 @@ namespace Lab1
                 }
                 Maze.Add(temp);
             }
-            Console.WriteLine("The size of Maze: {0}x{1} \n", rows, columns);
-            Console.WriteLine("Our Maze:");
-            for(int i = 0; i < 10; i++)
-            {
-                for(int j = 0; j < 10; j++)
-                {
-                    if(Maze[i][j] == 0)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                    }
-                    else
-                    {
-                        Console.BackgroundColor = ConsoleColor.Green;
-                    }
-                    Console.Write(" {0}",Maze[i][j]);
-                }
-                Console.WriteLine() ;
-            }
-            Console.ResetColor();
+            Console.Write("The size of Maze: {0}x{1} ", rows, columns);
+            consoleWriter writer = new consoleWriter();
+            writer.printMaze(Maze);
         }
     }
 }

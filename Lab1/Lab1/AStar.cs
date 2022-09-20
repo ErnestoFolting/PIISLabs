@@ -40,7 +40,7 @@ namespace Lab1
 
         public bool isCorrect(Point cellToCheck)
         {
-            return (cellToCheck.i >= 0 && cellToCheck.i < Maze[0].Count && cellToCheck.j >= 0 && cellToCheck.j < Maze.Count);
+            return (cellToCheck.i >= 0 && cellToCheck.i < Maze.Count && cellToCheck.j >= 0 && cellToCheck.j < Maze[0].Count);
         }
 
         public List<Point> findNear(Point currentPoint)
@@ -70,6 +70,10 @@ namespace Lab1
         }
         public Point findFinal(Point start)
         {
+            if (!(isCorrect(start) && isCorrect(final) && Maze[start.i][start.j] == 1 && Maze[final.i][final.j] == 1))
+            {
+                throw new Exception("Incorrect coodinates!");
+            }
             start.evaluate(Maze,final);
             List<Point> opened = new List<Point>();
             opened.Add(start);
@@ -112,13 +116,17 @@ namespace Lab1
         public void buildPath(Point start,Point foundFinal)
         {
             Point curr = foundFinal;
-            Console.WriteLine("The path A-Star:");
+            Console.WriteLine("\nThe path A-Star:");
             Console.Write("[{0};{1}]", curr.i, curr.j);
+            Maze[final.i][final.j] = 2;
             while (!(curr.i == start.i && curr.j == start.j))
             {
                 Console.Write(" - [{0};{1}]", curr.previous.i, curr.previous.j);
+                Maze[curr.previous.i][curr.previous.j] = 2;
                 curr = curr.previous;
             }
+            consoleWriter writer = new consoleWriter();
+            writer.printMaze(Maze);
         }
     }
 }

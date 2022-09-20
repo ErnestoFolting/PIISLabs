@@ -32,7 +32,7 @@ namespace Lab1
         }
         public bool isCorrect(cell cellToCheck)
         {   
-            return (cellToCheck.i >= 0 && cellToCheck.i < Maze[0].Count && cellToCheck.j >= 0 && cellToCheck.j < Maze.Count);
+            return (cellToCheck.i >= 0 && cellToCheck.i < Maze.Count && cellToCheck.j >= 0 && cellToCheck.j < Maze[0].Count);
         }
         public List<cell> nearFind(cell currentCell)
         {
@@ -86,12 +86,16 @@ namespace Lab1
         public void buildPath(cell start, cell final)
         {
             cell curr = final;
-            Console.WriteLine("The path:");
+            Console.WriteLine("\nThe path:");
             Console.Write("[{0};{1}]",final.i,final.j);
+            Maze[final.i][final.j] = 2;
             while(!(curr.i == start.i && curr.j == start.j)){
                 Console.Write(" - [{0};{1}]", curr.previous.i, curr.previous.j);
+                Maze[curr.previous.i][curr.previous.j] = 2;
                 curr = curr.previous;
             }
+            consoleWriter writer = new consoleWriter();
+            writer.printMaze(Maze);
         }
     }
 }
