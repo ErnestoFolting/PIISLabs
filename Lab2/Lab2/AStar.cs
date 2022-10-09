@@ -17,8 +17,14 @@ namespace Lab2
         {
             h = (Math.Abs(final.i - i) + Math.Abs(final.j - j))*10;
         }
+        public Point(int i, int j)
+        {
+            this.i = i;
+            this.j = j;
+        }
+        public Point() { }
     }
-    internal class AStar
+    class AStar
     {
         public List<List<int>> Maze = new List<List<int>>();
         public List<List<bool>> visited = new List<List<bool>>();
@@ -38,12 +44,12 @@ namespace Lab2
             this.final = final;
         }
 
-        public bool isCorrect(Point cellToCheck)
+        private bool isCorrect(Point cellToCheck)
         {
             return (cellToCheck.i >= 0 && cellToCheck.i < Maze.Count && cellToCheck.j >= 0 && cellToCheck.j < Maze[0].Count);
         }
 
-        public List<Point> findNear(Point currentPoint)
+        private List<Point> findNear(Point currentPoint)
         {
             List<int> movesI = new List<int>() { 0, -1, -1, -1, 0, 1, 1, 1 };
             List<int> movesJ = new List<int>() { -1, -1, 0, 1, 1, 1, 0, -1 };
@@ -68,7 +74,7 @@ namespace Lab2
             }
             return lst;
         }
-        public Point findFinal(Point start)
+        public int findFinal(Point start)
         {
             if (!(isCorrect(start) && isCorrect(final) && Maze[start.i][start.j] == 1 && Maze[final.i][final.j] == 1))
             {
@@ -83,8 +89,7 @@ namespace Lab2
                 Point current = opened.First(el => el.h + el.g == opened.Select(el => el.h + el.g).Min());
                 if(current.i == final.i && current.j == final.j)
                 {
-                    Console.WriteLine("\n\nWe have found!!! The cost is:{0}",current.h + current.g);
-                    return current;
+                    return current.h + current.g;
                 }
                 opened.Remove(current);
                 visited[current.i][current.j] = true;

@@ -9,10 +9,12 @@ namespace Lab2
         {
             try
             {
+                //Read the Mazel
                 string path = @"D:\Education\PIIS\PIISLabs\Lab2\Lab2\Maze.txt";
                 mazeReader reader = new mazeReader(path);
                 List<List<int>> Maze = reader.Maze;
 
+                //Read the starting and finish points
                 Console.WriteLine("\nInput start cell i:");
                 int startI = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Input start cell j:");
@@ -21,18 +23,20 @@ namespace Lab2
                 int finalI = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Input final cell j:");
                 int finalJ = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Input enemy start cell i:");
+                int enemyStartI = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Input enemy start cell j:");
+                int enemyStartJ = Convert.ToInt32(Console.ReadLine());
 
-                Point start2 = new Point();
-                Point final2 = new Point();
-                start2.i = startI;
-                start2.j = startJ;
-                final2.i = finalI;
-                final2.j = finalJ;
-                AStar astar = new AStar(Maze, final2);
-                Point foundFinal2 = astar.findFinal(start2);
-                astar.buildPath(start2, foundFinal2);
+                //Initialize the game
+                Point start = new Point(startI, startJ);
+                Point final = new Point(finalI, finalJ);
+                Point enemyStart = new Point(enemyStartI, enemyStartJ);
+                miniPacman game = new miniPacman(start, final, enemyStart,Maze);
+
+                game.game();
             }
-            catch(Exception ex)
+            catch(Exception ex) //Cathing exceptions
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
