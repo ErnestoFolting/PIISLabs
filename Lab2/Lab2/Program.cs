@@ -32,7 +32,9 @@ namespace Lab2
                 Point start = new Point(startI, startJ);
                 Point final = new Point(finalI, finalJ);
                 Point enemyStart = new Point(enemyStartI, enemyStartJ);
-                miniPacman game = new miniPacman(start, final, enemyStart,Maze);
+
+                node initialNode = new node(Maze, start, enemyStart, final);
+                miniPacman game = new miniPacman(initialNode);
 
                 game.game();
             }
