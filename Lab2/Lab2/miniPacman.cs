@@ -147,9 +147,75 @@ namespace Lab2
                 return temp;
             }
         }
-        public void playerMove()
+
+        public List<double> minimaxWithPrunning(node nodeToCheck, int depth, double alpha, double beta, bool maximizingPlayer)
         {
-            double childIndex = minimax(currentNode, 5, true)[1];
+            if (depth == 0 || isTerminal(nodeToCheck))
+            {
+                if (!maximizingPlayer)
+                {
+                    List<double> temp = new() { (depth * 0.000001) + heuristic(nodeToCheck) };
+                    return temp;
+                }
+                else
+                {
+                    List<double> temp = new() { heuristic(nodeToCheck) - (depth * 0.000001) };
+                    return temp;
+                }
+            }
+            if (maximizingPlayer)
+            {
+                double value = double.NegativeInfinity;
+                List<node> children = findChildren(nodeToCheck, true);
+                int childPos = 0;
+                for (int i = 0; i < children.Count; i++)
+                {
+
+                    double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, false)[0];
+                    if (tempValue > value)
+                    {
+                        value = tempValue;
+                        childPos = i;
+                    }
+                    if (tempValue > alpha) alpha = tempValue;
+                    if (beta <= alpha) break;
+                }
+                List<double> temp = new() { value, childPos };
+                return temp;
+            }
+            else
+            {
+                double value = double.PositiveInfinity;
+                List<node> children = findChildren(nodeToCheck, false);
+                int childPos = 0;
+                for (int i = 0; i < children.Count; i++)
+                {
+                    double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, true)[0];
+                    if (tempValue < value)
+                    {
+                        value = tempValue;
+                        childPos = i;
+                    }
+                    if (tempValue < beta) beta = tempValue;
+                    if (beta <= alpha) break;
+                }
+                List<double> temp = new() { value, childPos };
+                return temp;
+            }
+        }
+
+        public void playerMove(int withPrunning)
+        {
+            double childIndex = 0;
+            if (withPrunning == 1)
+            {
+                childIndex = minimaxWithPrunning(currentNode, 5, double.NegativeInfinity, double.PositiveInfinity, true)[1];
+            }
+            else
+            {
+                childIndex = minimax(currentNode, 4, true)[1];
+            }
+            
             currentNode = findChildren(currentNode, true)[(int)childIndex];
         }
         public void enemyMove()
@@ -163,10 +229,12 @@ namespace Lab2
         }
         public void game()
         {
+            Console.WriteLine("Choose the method:\n0 - minimax without prunning\n1 - minimax with prunning");
+            int withPrunning = Convert.ToInt32(Console.ReadLine());
             consoleWriter writer = new consoleWriter();
             while (!isTerminal(currentNode))
             {
-                playerMove();
+                playerMove(withPrunning);
                 writer.printInGameMaze(currentNode.Maze, currentNode.playerCurrent, currentNode.enemyCurrent, currentNode.playerFinal);
                 Thread.Sleep(500);
                 if (isTerminal(currentNode)) break;
