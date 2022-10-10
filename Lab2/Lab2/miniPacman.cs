@@ -23,21 +23,23 @@ namespace Lab2
     }
     class miniPacman
     {
-        private static System.Timers.Timer aTimer;
         public node currentNode;
         private double heuristic(node nodeToEvaluate)
         {
+            double heuristicValue = 0;
             if (nodeToEvaluate.playerCurrent.i == nodeToEvaluate.playerFinal.i &&
                 nodeToEvaluate.playerCurrent.j == nodeToEvaluate.playerFinal.j) return 3; 
             if (nodeToEvaluate.playerCurrent.i == nodeToEvaluate.enemyCurrent.i &&
                 nodeToEvaluate.playerCurrent.j == nodeToEvaluate.enemyCurrent.j) return -1;
-            
-            double heuristicValue;
+                  
             AStar astarToFinish = new AStar(nodeToEvaluate.Maze, nodeToEvaluate.playerFinal);
-            int toFinishValue = astarToFinish.findFinal(nodeToEvaluate.playerCurrent);
+            Point foundFinish= astarToFinish.findFinal(nodeToEvaluate.playerCurrent);
+            int toFinishValue = foundFinish.h + foundFinish.g;
+
 
             AStar astarToEnemy = new AStar(nodeToEvaluate.Maze, nodeToEvaluate.enemyCurrent);
-            int toEnemyValue = astarToEnemy.findFinal(nodeToEvaluate.playerCurrent);
+            Point foundEnemy = astarToEnemy.findFinal(nodeToEvaluate.playerCurrent);
+            int toEnemyValue = foundEnemy.h + foundEnemy.g;
 
             heuristicValue = (10*((double)1 / (toFinishValue)) + (1 - ((double)1 / (toEnemyValue))));
 
@@ -147,13 +149,17 @@ namespace Lab2
         }
         public void playerMove()
         {
-            double childIndex = minimax(currentNode, 4, true)[1];
+            double childIndex = minimax(currentNode, 5, true)[1];
             currentNode = findChildren(currentNode, true)[(int)childIndex];
         }
         public void enemyMove()
         {
-            double childIndex = minimax(currentNode, 4, false)[1];
-            currentNode = findChildren(currentNode, false)[(int)childIndex];
+            AStar astar = new AStar(currentNode.Maze, currentNode.playerCurrent);
+            Point foundPlayer = astar.findFinal(currentNode.enemyCurrent);
+            Console.WriteLine(foundPlayer.previous.i);
+            Console.WriteLine(foundPlayer.previous.j);
+            Point pointToGo = astar.findPoingToGo(currentNode.enemyCurrent, foundPlayer);
+            currentNode = new node(currentNode.Maze, currentNode.playerCurrent, pointToGo, currentNode.playerFinal);
         }
         public void game()
         {

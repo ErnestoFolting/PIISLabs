@@ -74,7 +74,7 @@ namespace Lab2
             }
             return lst;
         }
-        public int findFinal(Point start)
+        public Point findFinal(Point start)
         {
             if (!(isCorrect(start) && isCorrect(final) && Maze[start.i][start.j] == 1 && Maze[final.i][final.j] == 1))
             {
@@ -89,7 +89,7 @@ namespace Lab2
                 Point current = opened.First(el => el.h + el.g == opened.Select(el => el.h + el.g).Min());
                 if(current.i == final.i && current.j == final.j)
                 {
-                    return current.h + current.g;
+                    return current;
                 }
                 opened.Remove(current);
                 visited[current.i][current.j] = true;
@@ -118,20 +118,15 @@ namespace Lab2
             }
             return default;
         }
-        public void buildPath(Point start,Point foundFinal)
+        public Point findPoingToGo(Point start,Point foundFinal)
         {
             Point curr = foundFinal;
-            Console.WriteLine("\nThe path A-Star:");
-            Console.Write("[{0};{1}]", curr.i, curr.j);
-            Maze[final.i][final.j] = 2;
-            while (!(curr.i == start.i && curr.j == start.j))
+            while (!(curr.previous.i == start.i && curr.previous.j == start.j))
             {
-                Console.Write(" - [{0};{1}]", curr.previous.i, curr.previous.j);
-                Maze[curr.previous.i][curr.previous.j] = 2;
                 curr = curr.previous;
             }
-            consoleWriter writer = new consoleWriter();
-            writer.printMaze(Maze);
+            Point pointToGo = new Point(curr.i, curr.j);
+            return pointToGo;
         }
     }
 }
