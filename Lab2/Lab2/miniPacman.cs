@@ -63,7 +63,7 @@ namespace Lab2
         {
             return (cellToCheck.i >= 0 && cellToCheck.i < nodeToCheck.Maze.Count && cellToCheck.j >= 0 && cellToCheck.j < nodeToCheck.Maze[0].Count);
         }
-        public List<node> findChildren(node nodeToCheck, bool player)
+        public List<node> findChildren(node nodeToCheck, int player)
         {
             List<node> children = new List<node>();
 
@@ -73,7 +73,7 @@ namespace Lab2
             for (int i = 0; i < movesI.Count; i++)
             {
                 Point temp = new Point();
-                if (player)
+                if (player == 1)
                 {
                     temp.i = nodeToCheck.playerCurrent.i + movesI[i];
                     temp.j = nodeToCheck.playerCurrent.j + movesJ[i];
@@ -96,127 +96,98 @@ namespace Lab2
             }
             return children;
         }
-        public List<double> minimax(node nodeToCheck, int depth, bool maximizingPlayer)
+        public List<double> negamax(node nodeToCheck, int depth, int maximizingPlayer)
         {
             if (depth == 0 || isTerminal(nodeToCheck))
             {
-                if (!maximizingPlayer)
+                List<double> score = new() { maximizingPlayer * heuristic(nodeToCheck) + maximizingPlayer * (depth * 0.000001) };
+                return score;
+            }
+            double value = double.NegativeInfinity;
+            List<node> children = findChildren(nodeToCheck, maximizingPlayer);
+            int childPos = 0;
+            for(int i = 0;i < children.Count;i++)
+            { 
+                double tempValue = (-1) * (negamax(children[i], depth - 1, -maximizingPlayer)[0]);
+                if (tempValue > value)
                 {
-                    List<double> temp = new() { (depth * 0.000001) + heuristic(nodeToCheck) };
-                    return temp;
-                }
-                else
-                {
-                    List<double> temp = new() { heuristic(nodeToCheck) - (depth * 0.000001) };
-                    return temp;
+                    value = tempValue;
+                    childPos = i;
                 }
             }
-            if (maximizingPlayer)
-            {
-                double value = double.NegativeInfinity;
-                List<node> children = findChildren(nodeToCheck, true);
-                int childPos = 0;
-                for(int i = 0;i < children.Count;i++)
-                {
-                    
-                    double tempValue = minimax(children[i], depth - 1, false)[0];
-                    if (tempValue > value)
-                    {
-                        value = tempValue;
-                        childPos = i;
-                    }
-                }
-                List<double> temp = new() { value, childPos };
-                return temp;
-            }
-            else
-            {
-                double value = double.PositiveInfinity;
-                List<node> children = findChildren(nodeToCheck, false);
-                int childPos = 0;
-                for (int i = 0; i < children.Count; i++)
-                {
-                    double tempValue = minimax(children[i], depth - 1, true)[0];
-                    if (tempValue <= value)
-                    {
-                        value = tempValue;
-                        childPos = i;
-                    }
-                }
-                List<double> temp = new() { value, childPos };
-                return temp;
-            }
+            List<double> temp = new() { value, childPos };
+            return temp;
         }
 
-        public List<double> minimaxWithPrunning(node nodeToCheck, int depth, double alpha, double beta, bool maximizingPlayer)
-        {
-            if (depth == 0 || isTerminal(nodeToCheck))
-            {
-                if (!maximizingPlayer)
-                {
-                    List<double> temp = new() { (depth * 0.000001) + heuristic(nodeToCheck) };
-                    return temp;
-                }
-                else
-                {
-                    List<double> temp = new() { heuristic(nodeToCheck) - (depth * 0.000001) };
-                    return temp;
-                }
-            }
-            if (maximizingPlayer)
-            {
-                double value = double.NegativeInfinity;
-                List<node> children = findChildren(nodeToCheck, true);
-                int childPos = 0;
-                for (int i = 0; i < children.Count; i++)
-                {
+        //public List<double> minimaxWithPrunning(node nodeToCheck, int depth, double alpha, double beta, bool maximizingPlayer)
+        //{
+        //    if (depth == 0 || isTerminal(nodeToCheck))
+        //    {
+        //        if (!maximizingPlayer)
+        //        {
+        //            List<double> temp = new() { (depth * 0.000001) + heuristic(nodeToCheck) };
+        //            return temp;
+        //        }
+        //        else
+        //        {
+        //            List<double> temp = new() { heuristic(nodeToCheck) - (depth * 0.000001) };
+        //            return temp;
+        //        }
+        //    }
+        //    if (maximizingPlayer)
+        //    {
+        //        double value = double.NegativeInfinity;
+        //        List<node> children = findChildren(nodeToCheck, true);
+        //        int childPos = 0;
+        //        for (int i = 0; i < children.Count; i++)
+        //        {
 
-                    double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, false)[0];
-                    if (tempValue > value)
-                    {
-                        value = tempValue;
-                        childPos = i;
-                    }
-                    if (tempValue > alpha) alpha = tempValue;
-                    if (beta <= alpha) break;
-                }
-                List<double> temp = new() { value, childPos };
-                return temp;
-            }
-            else
-            {
-                double value = double.PositiveInfinity;
-                List<node> children = findChildren(nodeToCheck, false);
-                int childPos = 0;
-                for (int i = 0; i < children.Count; i++)
-                {
-                    double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, true)[0];
-                    if (tempValue < value)
-                    {
-                        value = tempValue;
-                        childPos = i;
-                    }
-                    if (tempValue < beta) beta = tempValue;
-                    if (beta <= alpha) break;
-                }
-                List<double> temp = new() { value, childPos };
-                return temp;
-            }
-        }
+        //            double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, false)[0];
+        //            if (tempValue > value)
+        //            {
+        //                value = tempValue;
+        //                childPos = i;
+        //            }
+        //            if (tempValue > alpha) alpha = tempValue;
+        //            if (beta <= alpha) break;
+        //        }
+        //        List<double> temp = new() { value, childPos };
+        //        return temp;
+        //    }
+        //    else
+        //    {
+        //        double value = double.PositiveInfinity;
+        //        List<node> children = findChildren(nodeToCheck, false);
+        //        int childPos = 0;
+        //        for (int i = 0; i < children.Count; i++)
+        //        {
+        //            double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, true)[0];
+        //            if (tempValue < value)
+        //            {
+        //                value = tempValue;
+        //                childPos = i;
+        //            }
+        //            if (tempValue < beta) beta = tempValue;
+        //            if (beta <= alpha) break;
+        //        }
+        //        List<double> temp = new() { value, childPos };
+        //        return temp;
+        //    }
+        //}
 
         public void playerMove(int withPrunning)
         {
             double childIndex = 0;
             if (withPrunning == 1)
             {
-                childIndex = minimaxWithPrunning(currentNode, 5, double.NegativeInfinity, double.PositiveInfinity, true)[1];
+                //childIndex = minimaxWithPrunning(currentNode, 5, double.NegativeInfinity, double.PositiveInfinity, true)[1];
             }
             else
             {
-                childIndex = minimax(currentNode, 4, true)[1];
+                childIndex = negamax(currentNode, 4, 1)[1];
             }
             
-            currentNode = findChildren(currentNode, true)[(int)childIndex];
+            currentNode = findChildren(currentNode, 1)[(int)childIndex];
         }
         public void enemyMove()
         {
