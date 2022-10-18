@@ -119,72 +119,41 @@ namespace Lab2
             return temp;
         }
 
-        //public List<double> minimaxWithPrunning(node nodeToCheck, int depth, double alpha, double beta, bool maximizingPlayer)
-        //{
-        //    if (depth == 0 || isTerminal(nodeToCheck))
-        //    {
-        //        if (!maximizingPlayer)
-        //        {
-        //            List<double> temp = new() { (depth * 0.000001) + heuristic(nodeToCheck) };
-        //            return temp;
-        //        }
-        //        else
-        //        {
-        //            List<double> temp = new() { heuristic(nodeToCheck) - (depth * 0.000001) };
-        //            return temp;
-        //        }
-        //    }
-        //    if (maximizingPlayer)
-        //    {
-        //        double value = double.NegativeInfinity;
-        //        List<node> children = findChildren(nodeToCheck, true);
-        //        int childPos = 0;
-        //        for (int i = 0; i < children.Count; i++)
-        //        {
-
-        //            double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, false)[0];
-        //            if (tempValue > value)
-        //            {
-        //                value = tempValue;
-        //                childPos = i;
-        //            }
-        //            if (tempValue > alpha) alpha = tempValue;
-        //            if (beta <= alpha) break;
-        //        }
-        //        List<double> temp = new() { value, childPos };
-        //        return temp;
-        //    }
-        //    else
-        //    {
-        //        double value = double.PositiveInfinity;
-        //        List<node> children = findChildren(nodeToCheck, false);
-        //        int childPos = 0;
-        //        for (int i = 0; i < children.Count; i++)
-        //        {
-        //            double tempValue = minimaxWithPrunning(children[i], depth - 1, alpha, beta, true)[0];
-        //            if (tempValue < value)
-        //            {
-        //                value = tempValue;
-        //                childPos = i;
-        //            }
-        //            if (tempValue < beta) beta = tempValue;
-        //            if (beta <= alpha) break;
-        //        }
-        //        List<double> temp = new() { value, childPos };
-        //        return temp;
-        //    }
-        //}
+        public List<double> negamaxWithPruning(node nodeToCheck, int depth, double alpha, double beta, int maximizingPlayer)
+        {
+            if (depth == 0 || isTerminal(nodeToCheck))
+            {
+                List<double> score = new() { maximizingPlayer * heuristic(nodeToCheck) + maximizingPlayer * (depth * 0.000001) };
+                return score;
+            }
+            double value = double.NegativeInfinity;
+            List<node> children = findChildren(nodeToCheck, maximizingPlayer);
+            int childPos = 0;
+            for (int i = 0; i < children.Count; i++)
+            {
+                double tempValue = (-1) * (negamaxWithPruning(children[i], depth - 1,-beta,-alpha, -maximizingPlayer)[0]);
+                if (tempValue > value)
+                {
+                    value = tempValue;
+                    childPos = i;
+                }
+                if (alpha < tempValue) alpha = tempValue;
+                if (alpha >= beta) break;
+            }
+            List<double> temp = new() { value, childPos };
+            return temp;
+        }
 
         public void playerMove(int withPrunning)
         {
             double childIndex = 0;
             if (withPrunning == 1)
             {
-                //childIndex = minimaxWithPrunning(currentNode, 5, double.NegativeInfinity, double.PositiveInfinity, true)[1];
+                childIndex = negamaxWithPruning(currentNode, 6, double.NegativeInfinity, double.PositiveInfinity, 1)[1];
             }
             else
             {
-                childIndex = negamax(currentNode, 4, 1)[1];
+                childIndex = negamax(currentNode, 6, 1)[1];
             }
             
             currentNode = findChildren(currentNode, 1)[(int)childIndex];
