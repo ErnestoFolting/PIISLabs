@@ -144,6 +144,42 @@ namespace Lab2
             return temp;
         }
 
+        public List<double> negaScout(node nodeToCheck, int depth, double alpha, double beta, int maximizingPlayer)
+        {
+            if (depth == 0 || isTerminal(nodeToCheck))
+            {
+                List<double> score = new() { maximizingPlayer * heuristic(nodeToCheck) + maximizingPlayer * (depth * 0.000001) };
+                return score;
+            }
+            double value = double.NegativeInfinity;
+            List<node> children = findChildren(nodeToCheck, maximizingPlayer);
+            int childPos = 0;
+            for (int i = 0; i < children.Count; i++)
+            {
+                double tempValue;
+                if (i == 0)
+                {
+                     tempValue = (-1) * (negamaxWithPruning(children[i], depth - 1, -beta, -alpha, -maximizingPlayer)[0]);
+                }
+                else
+                {
+                     tempValue = (-1) * (negamaxWithPruning(children[i], depth - 1, (-alpha -1), -alpha, -maximizingPlayer)[0]);
+                    if (tempValue > alpha && tempValue < beta) {
+                        tempValue = (-1) * (negamaxWithPruning(children[i], depth - 1, -beta, -tempValue, -maximizingPlayer)[0]);
+                    }
+                }                
+                if (tempValue > value)
+                {
+                    value = tempValue;
+                    childPos = i;
+                }
+                if (alpha < tempValue) alpha = tempValue;
+                if (alpha >= beta) break;
+            }
+            List<double> temp = new() { value, childPos };
+            return temp;
+        }
+
         public void playerMove(int algo)
         {
             double childIndex = 0;
@@ -156,7 +192,7 @@ namespace Lab2
                 childIndex = negamax(currentNode, 6, 1)[1];
             }else
             {
-                //negascout
+                childIndex = negaScout(currentNode,6,double.NegativeInfinity,double.PositiveInfinity,1)[1];
             }
             
             currentNode = findChildren(currentNode, 1)[(int)childIndex];
