@@ -144,16 +144,19 @@ namespace Lab2
             return temp;
         }
 
-        public void playerMove(int withPrunning)
+        public void playerMove(int algo)
         {
             double childIndex = 0;
-            if (withPrunning == 1)
+            if (algo == 1)
             {
                 childIndex = negamaxWithPruning(currentNode, 6, double.NegativeInfinity, double.PositiveInfinity, 1)[1];
             }
-            else
+            else if (algo == 0)
             {
                 childIndex = negamax(currentNode, 6, 1)[1];
+            }else
+            {
+                //negascout
             }
             
             currentNode = findChildren(currentNode, 1)[(int)childIndex];
@@ -169,12 +172,12 @@ namespace Lab2
         }
         public void game()
         {
-            Console.WriteLine("Choose the method:\n0 - minimax without prunning\n1 - minimax with prunning");
-            int withPrunning = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Choose the algo:\n0 - negamax without pruning\n1 - negamax with pruning\n2 - negascout");
+            int algo = Convert.ToInt32(Console.ReadLine());
             consoleWriter writer = new consoleWriter();
             while (!isTerminal(currentNode))
             {
-                playerMove(withPrunning);
+                playerMove(algo);
                 writer.printInGameMaze(currentNode.Maze, currentNode.playerCurrent, currentNode.enemyCurrent, currentNode.playerFinal);
                 Thread.Sleep(500);
                 if (isTerminal(currentNode)) break;
