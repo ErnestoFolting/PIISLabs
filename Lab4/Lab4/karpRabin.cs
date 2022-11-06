@@ -41,7 +41,7 @@ namespace Lab4
                 {
                     if(_text.Substring(i, _substr.Length) == _substr)
                     {
-                        Console.WriteLine("\nFound the substring at position {0}",i);
+                        Console.WriteLine("\nFound the substring at position {0}",i+1);
                         found = true;
                     }
                 }
@@ -52,7 +52,7 @@ namespace Lab4
         }
         public int getHash(string substrToEvaluate)
         {
-            return (Convert.ToInt32(substrToEvaluate) % 13);
+            return (Convert.ToInt32(substrToEvaluate) % 21);
         }
     }
 }
