@@ -26,7 +26,7 @@ namespace Lab4
             {
                 Point currentPoint = generatedStartPoints.MinBy(el => el.distanceToStart);
                 generatedStartPoints.Remove(currentPoint);
-                if (currentPoint.distanceToStart == int.MaxValue)
+                if (currentPoint.distanceToStart == int.MaxValue || currentPoint.distanceToStart <0)
                 {
                     Console.WriteLine("From {0} to {1} there is no path", startPointNumber, currentPoint.number);
                 }

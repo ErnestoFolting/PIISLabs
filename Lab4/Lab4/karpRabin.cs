@@ -34,6 +34,7 @@ namespace Lab4
                 Console.Write(el);
                 Console.Write(" ");
             }
+            Console.WriteLine();
             bool found = false;
             for(int i =0;i< hashes.Count; i++)
             {
@@ -41,7 +42,7 @@ namespace Lab4
                 {
                     if(_text.Substring(i, _substr.Length) == _substr)
                     {
-                        Console.WriteLine("\nFound the substring at position {0}",i+1);
+                        Console.WriteLine("Found the substring at position {0}",i+1);
                         found = true;
                     }
                 }

@@ -16,15 +16,20 @@ namespace Lab4
             fileReader.getDijkstra(pathDijkstra);
             fileReader.getPrima(pathPrima);
 
-            //Karp-Rabin
-            //Console.WriteLine("What substring you want to find? [From 6 to 8 symbols]");
-            //string? substr = Console.ReadLine();
-            //karpRabin karpRabinAlgo = new(fileReader.text,substr);
-            //karpRabinAlgo.algo();
+            //Karp - Rabin
+            Console.WriteLine("What substring you want to find? [From 6 to 8 symbols]");
+            string? substr = Console.ReadLine();
+            karpRabin karpRabinAlgo = new(fileReader.text, substr);
+            karpRabinAlgo.algo();
+            Console.WriteLine();
 
             //Dijkstra
             dijkstra dijkstraAlgo = new(fileReader.dijkstraMatrix);
             dijkstraAlgo.algo();
+
+            //Prima
+            prima primaAlgo = new(fileReader.primaMatrix);
+            primaAlgo.algo();
         }
     }
 }
