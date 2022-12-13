@@ -8,9 +8,9 @@ namespace Lab6
 {
     public static class NelderMeadAlgo
     {
-        private const int a = 1;
-        private const int yLower = 2;
-        private const int yUpper = 3;
+        private const double a = 1;
+        private const double yLower = 2;
+        private const double yUpper = 3;
         private const double yAVG = (yUpper + yLower) / 2;
         private const double bLower = 0.4;
         private const double bUpper = 0.6;
@@ -18,7 +18,7 @@ namespace Lab6
         private const double distanceBetweenPoints = 1;
         private const double precision = 0.01;
         private const int iterations = 300;
-        private const int n = 3;
+        private const double n = 3;
         public static double startFunction(List<double> xs)
         {
             return -5 * xs[0] * Math.Pow(xs[1], 2) * xs[2] + 2 *
@@ -57,12 +57,16 @@ namespace Lab6
                 {
                     funcValues.Add(startFunction(tops[i]));
                 }
-                List<double> sorted = funcValues;
+                List<double> sorted = new();
+                foreach(var el in funcValues)
+                {
+                    sorted.Add(el);
+                }
                 sorted.Sort();
                 sorted.Reverse();
                 double highValue = sorted[0];
                 double nextHighValue = sorted[1];
-                double lowValue = sorted[n];
+                double lowValue = sorted[Convert.ToInt32(n)];
                 int highIndex = funcValues.IndexOf(highValue);
                 int nextHighIndex = funcValues.IndexOf(nextHighValue);
                 int lowIndex = funcValues.IndexOf(lowValue);
@@ -124,10 +128,9 @@ namespace Lab6
                 List<double> bestTop = tops[lowIndex];
                 for(int i = 0; i < tops.Count; i++)
                 {
-                    if(i != lowIndex)
-                    {
-                        tops[i] = listsOperation(bestTop, listAndNumberOperation(listsOperation(tops[i], bestTop, "-"), 0.5, "*"), "+");
-                    }
+                    if(i == lowIndex) continue;
+
+                    tops[i] = listsOperation(bestTop, listAndNumberOperation(listsOperation(tops[i], bestTop, "-"), 0.5, "*"), "+");
                 }
             }
         }

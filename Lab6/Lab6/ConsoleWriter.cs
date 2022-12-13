@@ -45,8 +45,8 @@ namespace Lab6
             }
             else
             {
-                Console.WriteLine("F max: {0} pointIndex: {1}",maxFuncValue,maxIndex);
-                Console.WriteLine("F min: {0} pointIndex: {1}",minFuncValue,minIndex);
+                Console.WriteLine("F max: {0} Point: x{1}",maxFuncValue,maxIndex+1);
+                Console.WriteLine("F min: {0} Point: x{1}",minFuncValue,minIndex+1);
                 return true;
             }
         }
